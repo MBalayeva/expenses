@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Prefered currency</h1>
+<div class="content">
+    <h3 class="mt-4">Prefered currency</h3>
+
+    <form action="{% url 'preferences' %}" method="post" class="mt-3">
+        {% csrf_token %}
+        <div class="input-group">
+            <select name="currency" class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                <option selected>Choose...</option>
+                {% for currency in currencies %}
+                    <option name="currency" value="{{currency.name}} - {{currency.value}}">{{currency.name}} - {{currency.value}}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-outline-secondary" type="submit">Save</button>
+        </div>
+    </form>
+</div>
 {% endblock content %}
