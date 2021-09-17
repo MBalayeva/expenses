@@ -1,5 +1,6 @@
-{% extends "base_auth.html" %} {% load static %} {% block title %} | Login
-{%endblock title %} {% block content %}
+{% extends "base_auth.html" %} {% load static %} 
+{% block title %} | Login {%endblock title %} 
+{% block content %}
 <div class="container">
   <div class="row mt-5">
     <div class="col-md-3"></div>
@@ -8,9 +9,7 @@
         <div class="card-body">
           <div class="card-title">
             <h4>Login</h4>
-            {% if messages %}
-              {% include 'partials/_messages.html' %}
-            {% endif %}
+            {% if messages %} {% include 'partials/_messages.html' %} {% endif%}
           </div>
           <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
@@ -51,5 +50,7 @@
     </div>
   </div>
 </div>
+
+<script src='{% static "authentication/auth.js" %}'></script>
 
 {% endblock content %}

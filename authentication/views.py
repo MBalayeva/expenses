@@ -92,6 +92,11 @@ class LoginView(View):
         username = request.POST['username']
         password = request.POST['password']
 
+
+        context = {
+            'fieldValues': request.POST
+        }
+
         if username and password:
             user = auth.authenticate(username=username, password=password)
 
@@ -101,12 +106,12 @@ class LoginView(View):
                     messages.success(request, f'Welcome {user.username}')
                     return redirect('expenses')
                 messages.error(request, 'Your account is not active, please check your email')
-                return render(request, 'authentication/login.html')
+                return render(request, 'authentication/login.html', context)
             messages.error(request, 'Your credentials are wrong')
-            return render(request, 'authentication/login.html')
+            return render(request, 'authentication/login.html', context)
         
         messages.error(request, 'Fill both username and password')
-        return render(request, 'authentication/login.html')
+        return render(request, 'authentication/login.html', context)
 
 
 class LogoutView(View):
