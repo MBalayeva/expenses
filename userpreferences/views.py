@@ -19,7 +19,8 @@ def index(request):
             currencies.append({'name': k, 'value': v})
 
     context = {
-        'currencies': currencies
+        'currencies': currencies, 
+        'user_preference': user_preference
     }
 
     if request.method == "GET":
