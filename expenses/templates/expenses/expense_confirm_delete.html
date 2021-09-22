@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block content %}
+<div class="container pt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Expenses</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Delete expense</li>
+        </ol>
+    </nav>
+<h3>Edit Expense</h3>
+<form method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <input type="submit" value="Confirm" class="btn btn-danger">
+</form>
+{% endblock %}
