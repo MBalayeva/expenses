@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
 <div class="container pt-3">
   <div class="row">
     <div class="col-md-10">
@@ -14,9 +16,14 @@
     </div>
   </div>
 </div>
-<h3>Expenses</h3>
+<h3 class="mt-2">Expenses</h3>
+<div class="form-group mt-4">
+  {% csrf_token %}
+  <input type="text" class="form-control" id="searchField" placeholder="Search">
+</div>
 {% if expenses %}
-  <table class="table table-stripped table-hover">
+<div id="table-container">
+  <table class="table table-stripped table-hover mt-4">
     <thead>
       <tr>
         <th>Amount</th>
@@ -42,23 +49,44 @@
     {% endfor %}
     </tbody>
   </table>
+</div>
+
+<p id="no-results" class="mt-4" style="display: none;">No results </p>
+
+<div id="table-search-container">
+  <table class="table table-stripped table-hover mt-4">
+    <thead>
+      <tr>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="table-search-body"></tbody>
+  </table>
+</div>
 
   {% if expenses.count > 2 %}
-    <div class="d-flex justify-content-between align-items-center mt-4">
-      <p>Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}</p>
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          {% if page_obj.has_previous  %}
-            <li class="page-item {% if page_obj == 1 %}active{% endif %}"><a class="page-link" href="?page=1">1</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-          {% endif %}
-          {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">Next</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a></li>
-          {% endif %}
-        </ul>
-      </nav>
+    <div id="pagination-container">
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <p>Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}</p>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            {% if page_obj.has_previous  %}
+              <li class="page-item {% if page_obj == 1 %}active{% endif %}"><a class="page-link" href="?page=1">1</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            {% if page_obj.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">Next</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
     </div>
   {% endif %}
 {% endif %}
+<script src="{% static 'expenses/js/main.js' %}"></script>
 {% endblock content %}

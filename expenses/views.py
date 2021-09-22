@@ -5,6 +5,20 @@ from .models import Expense, Category
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+
+def search_expenses(request):
+    search_str = request.POST.get('searchText')
+
+    expenses = Expense.objects.filter(
+        amount__istartswith=search_str, owner=request.user) | Expense.objects.filter(
+        date__istartswith=search_str, owner=request.user) | Expense.objects.filter(
+        description__icontains=search_str, owner=request.user) | Expense.objects.filter(
+        category__icontains=search_str, owner=request.user)
+    
+    data = expenses.values()
+    return JsonResponse(list(data), safe=False)
+
 
 # Create your views here.
 @login_required(login_url='authentication/login')
