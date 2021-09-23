@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from userpreferences.models import UserPreferences
 
 def search_expenses(request):
     search_str = request.POST.get('searchText')
@@ -24,14 +25,16 @@ def search_expenses(request):
 @login_required(login_url='authentication/login')
 def index(request):
     expenses = Expense.objects.filter(owner=request.user)
+    preference = UserPreferences.objects.get(user=request.user)
 
-    paginator = Paginator(expenses, 2)
+    paginator = Paginator(expenses, 5)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
 
     context = {
         'expenses': expenses,
-        'page_obj': page_obj
+        'page_obj': page_obj,
+        'currency': preference.currency
     }
     return render(request, 'expenses/index.html', context)
 

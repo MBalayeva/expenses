@@ -15,7 +15,7 @@ searchField.addEventListener('keyup', (e) => {
     if(searchText.trim().length > 0) {
         $.ajax({
             type: "post",
-            url: "/search-expenses/",
+            url: "/income/search-income/",
             data: {
               "searchText": searchText,
               "csrfmiddlewaretoken": csrf,
@@ -27,16 +27,16 @@ searchField.addEventListener('keyup', (e) => {
               tableSearchContainer.style.display = 'block'
 
               if(res.length === 0) {
+                paginationContainer.style.display = 'none'
                 tableSearchContainer.style.display = 'none'
                 noResults.style.display = 'block'
-                paginationContainer.style.display = 'none'
               } else {
                 noResults.style.display = 'none'
                 res.forEach(item => {
                     tableSearchBody.innerHTML += `
                         <tr>
                             <td>${item.amount}</td>
-                            <td>${item.category}</td>
+                            <td>${item.source}</td>
                             <td>${item.description}</td>
                             <td>${item.date}</td>
                         </tr>
@@ -49,6 +49,7 @@ searchField.addEventListener('keyup', (e) => {
             },
         });
     } else {
+        console.log("hmm")
         tableContainer.style.display = 'block'
         tableSearchContainer.style.display = 'none'
         paginationContainer.style.display = 'block' 

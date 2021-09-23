@@ -2,11 +2,11 @@
 <div class="container pt-3">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Expenses</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Add expenses</li>
+          <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Income</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Add income</li>
         </ol>
       </nav>
-    <h3>Add Expense</h3>
+    <h3>Add Income</h3>
 
     <div class="card">
         <div class="card-body">
@@ -21,16 +21,16 @@
                     <input type="text" name="description" id="description" class="form-control form-control-sm" value="{{values.description}}">
                 </div>
                 <div class="form-group mt-3">
-                    <label for="category" class="form-label">Category</label>
-                    <select type="text" name="category" id="category" class="form-control form-control-sm">
-                    {% for category in categories %}
-                        <option value="{{category.name}}" name="category">{{category.name}}</option>
+                    <label for="source" class="form-label">Source</label>
+                    <select type="text" name="source" id="source" class="form-control form-control-sm">
+                    {% for source in sources %}
+                        <option value="{{source.name}}" name="source">{{source.name}}</option>
                     {% endfor %}
                     </select>
                 </div>
                 <div class="form-group mt-3">
-                    <label for="expense_date" class="form-label">Date of expense</label>
-                    <input type="date" name="expense_date" id="date" class="form-control form-control-sm" value="{{values.date |date:'Y-m-d'}}">
+                    <label for="income_date" class="form-label">Date of expense</label>
+                    <input type="date" name="income_date" id="date" class="form-control form-control-sm" value="{{values.date |date:'Y-m-d'}}">
                 </div>
                 <button class="add-expense-btn btn btn-primary d-block mt-3">Add</button>
             </form>
