@@ -14,6 +14,7 @@ from django.urls import reverse
 from django.contrib import auth
 from django.core.mail import EmailMessage
 from .utils import account_activation_token
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 # Create your views here.
 class RegisterView(View):
@@ -194,7 +195,50 @@ class ResetPasswordView(View):
 
 class CompletePasswordReset(View):
     def get(self, request, uidb64, token):
-        return render(request, 'authentication/set_new_password.html')
+        context = {
+            'uidb64': uidb64,
+            'token': token
+        }
 
+        try:
+            user_id = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk = user_id)
+
+            if not PasswordResetTokenGenerator.check_token(user, token):
+                messages.info(request, 'Link is invalid, please request a new one!')
+                return render(request, 'authentication/reset_password.html')
+
+        except Exception as identifier:
+            pass
+
+        return render(request, 'authentication/set_new_password.html', context)
+        
     def post(self, request, uidb64, token):
-        return render(request, 'authentication/set_new_password.html')
+        context = {
+            'uidb64': uidb64,
+            'token': token
+        }
+
+        password = request.POST['password']
+        password2 = request.POST['password2']
+
+        if password != password2:
+            messages.error(request, 'Passwords should match')
+            return render(request, 'authentication/set_new_password.html', context)
+
+        if len(password) < 8:
+            messages.error(request, 'Password should be at least 8 characters long')
+            return render(request, 'authentication/set_new_password.html', context)
+
+        try:
+            user_id = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk = user_id)
+            user.set_password(password)
+            user.save()
+
+            messages.success(request, 'Password changed successfully!')
+            return redirect('login')
+
+        except Exception as identifier:
+            messages.info(request, 'Something went wrong, please try again')
+            return render(request, 'authentication/set_new_password.html', context)
