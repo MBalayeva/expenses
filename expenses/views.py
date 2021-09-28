@@ -7,6 +7,7 @@ from django.views.generic.edit import DeleteView
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from userpreferences.models import UserPreferences
+import datetime
 
 def search_expenses(request):
     search_str = request.POST.get('searchText')
@@ -112,3 +113,36 @@ def edit_expense(request, id):
 class ExpenseDeleteView(DeleteView):
     model = Expense
     success_url = reverse_lazy('expenses')
+
+
+def expenses_summary(request):
+    current_date = datetime.date.today()
+    six_month_period = datetime.timedelta(days=30*6)
+    six_month_ago = current_date - six_month_period
+
+    expenses = Expense.objects.filter(owner=request.user, date__gte=six_month_ago, date__lte=current_date)
+    finalrep = {}
+
+    def get_categories(expense):
+        return expense.category
+
+    def get_amount(category):
+        amount = 0
+        expenses_for_category = expenses.filter(category=category)
+
+        for expense in expenses_for_category:
+            amount += expense.amount
+
+        return amount
+
+    categories = list(set(map(get_categories, expenses))) 
+
+    for c in categories:
+        finalrep[c] = get_amount(c)
+
+    return JsonResponse(finalrep)
+
+
+def statsView(request):
+    if request.method == "GET":
+        return render(request, 'expenses/stats.html')

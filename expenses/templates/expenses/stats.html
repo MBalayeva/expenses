@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="container pt-3">
+  <div class="row">
+    <div class="col-md-10">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#">Expenses</a></li>
+          <li class="breadcrumb-item active" aria-current="page">
+            My expenses
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-md-2">
+      <a href="{% url 'add-expenses' %}" class="btn btn-primary"
+        >Expenses Summary</a
+      >
+    </div>
+  </div>
+</div>
+<h3 class="mt-2">Expenses Summary</h3>
+
+<div class="chart-container">
+  <canvas id="myChart" width="400" height="400"></canvas>
+</div>
+
+<script src="{% static 'expenses/js/stats.js' %}" defer></script>
+{% endblock content %}
