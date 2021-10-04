@@ -57,3 +57,4 @@ const getChartData = () => {
 };
 
 window.onload = getChartData();
+

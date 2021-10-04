@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from userpreferences.models import UserPreferences
 import datetime
+from django.utils.timezone import make_aware
 
 def search_expenses(request):
     search_str = request.POST.get('searchText')
@@ -117,7 +118,7 @@ class ExpenseDeleteView(DeleteView):
 
 def expenses_summary(request):
     current_date = datetime.date.today()
-    six_month_period = datetime.timedelta(days=30*6)
+    six_month_period = datetime.timedelta(days=30*6)      
     six_month_ago = current_date - six_month_period
 
     expenses = Expense.objects.filter(owner=request.user, date__gte=six_month_ago, date__lte=current_date)

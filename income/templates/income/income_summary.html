@@ -6,22 +6,21 @@
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="#">Expenses</a></li>
           <li class="breadcrumb-item active" aria-current="page">
-            My expenses
+            My income
           </li>
         </ol>
       </nav>
     </div>
   </div>
 </div>
-<h3 class="mt-2">Expenses Summary</h3>
-
+<h3 class="mt-2">Income Summary</h3>
 <div class="row mt-4">
   <div class="col-md-5">
     <div class="chart-container">
-      <canvas id="myChart" width="400" height="400"></canvas>
+      <canvas id="summary-chart" width="400" height="400"></canvas>
     </div>
   </div>
 </div>
 
-<script src="{% static 'expenses/js/stats.js' %}" defer></script>
+<script src="{% static 'income/js/stats.js' %}" defer></script>
 {% endblock content %}

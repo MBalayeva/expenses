@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Income, Source
@@ -7,6 +8,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 from django.http import JsonResponse
+import datetime
 
 
 def search_income(request):
@@ -113,3 +115,29 @@ class IncomeDeleteView(DeleteView):
     model = Income
     success_url = reverse_lazy('income')
 
+
+def IncomeSummaryView(request):
+    return render(request, 'income/income_summary.html')
+
+
+def income_summary(request):
+    current_date = datetime.date.today()
+    six_month_ago = datetime.timedelta(days=30*6)
+    six_month_period = current_date - six_month_ago
+
+    income = Income.objects.filter(owner=request.user, date__lte=current_date, date__gte=six_month_period)
+    sources = list(set(map(lambda income: income.source, income)))
+
+    def get_amount(source):
+        amount = 0
+        for single_income in income:
+            if single_income.source == source:
+                amount += single_income.amount
+        return amount
+
+    final_dict = {}
+
+    for source in sources:
+        final_dict[source] = get_amount(source)
+
+    return JsonResponse(final_dict)
