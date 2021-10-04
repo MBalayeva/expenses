@@ -48,25 +48,25 @@ class RegisterView(View):
 
                 user = User.objects.create_user(username=username, email=email)
                 user.set_password(password)
-                # user.is_active = False
+                user.is_active = False
                 user.save()
-                # email_subject = 'Activate your account'
+                email_subject = 'Activate your account'
 
-                # uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-                # domain = get_current_site(request).domain
-                # link = reverse('activate', kwargs={'uidb64': uidb64, "token": token_generator.make_token(user)})
-                # activate_link = 'http://'+domain+link
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                domain = get_current_site(request).domain
+                link = reverse('activate', kwargs={'uidb64': uidb64, "token": account_activation_token.make_token(user)})
+                activate_link = 'http://'+domain+link
 
-                # email_body = 'hello '+user.username+' please use this link to verify your email: /n'+activate_link
-                # email = EmailMessage(
-                #     email_subject,
-                #     email_body,
-                #     'noreply@semycolon.com',
-                #     [email],
-                # )
-                # email.send(fail_silently=False)
-                messages.success(request, 'You created new account successfully!')
-                # return render(request, 'authentication/register.html')
+                email_body = 'hello '+user.username+' please use this link to verify your email: '+activate_link
+                email = EmailMessage(
+                    email_subject,
+                    email_body,
+                    'noreply@semycolon.com',
+                    [email],
+                )
+                EmailThread(email).start()
+
+                messages.success(request, 'You created new account successfully, please verify it to actually be able to login!')
                 return redirect('login')
 
         messages.error(request, 'Username or password are already being used')
@@ -76,7 +76,7 @@ class RegisterView(View):
 class VerificationView(View):
     def get(self, request, uidb64, token):
         try:
-            pk = force_text(urlsafe_base64_encode(uidb64))
+            pk = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk = pk)
 
             if not account_activation_token.check_token(user, token):
@@ -84,6 +84,7 @@ class VerificationView(View):
 
             if user.is_active:
                 return redirect('login')
+
             user.is_active = True
             user.save()
             messages.success(request, 'Account successfully activated')

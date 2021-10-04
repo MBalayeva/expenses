@@ -5,9 +5,8 @@ const usernameErrorWrapper = document.getElementById("username-error-wrapper");
 const emailField = document.getElementById("emailField");
 const emailErrorWrapper = document.getElementById("email-error-wrapper");
 
-const passwordField = document.getElementById("passwordField");
-
 const registerBtn = document.getElementById("register-submit-btn");
+
 
 usernameField.addEventListener("keyup", (e) => {
   const username = e.target.value;
@@ -16,7 +15,7 @@ usernameField.addEventListener("keyup", (e) => {
   usernameCheckWrapper.classList.remove("d-none");
   usernameErrorWrapper.classList.add("d-none");
 
-  usernameCheckWrapper.innerHTML = `Checking ${username}`;
+  usernameCheckWrapper.innerHTML = `Checking ${username} ...`;
 
   if (username.length > 0) {
     $.ajax({
